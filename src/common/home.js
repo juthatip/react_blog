@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 
 class Home extends Component {
+  constructor() {
+    super();
+  }
     render(){
-        return (<h1>Hi</h1>);
+        return (
+          <h1>Posts</h1>
+
+        );
     }
 }
 

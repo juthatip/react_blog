@@ -6,14 +6,14 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import Main from './common/main';
 import Home from './common/home';
 import About from './common/About';
-import Blog from './Components/Blog';
+import ContentForm from './Components/ContentForm';
 
 
 ReactDOM.render(
     <Router history={browserHistory}>
     <Route path="/" component={Main}>
      <IndexRoute component={Home} />
-           <Route path="/blog" component={Blog} />
+           <Route path="/create" component={ContentForm} />
            <Route path="/about" component={About} />
        </Route>
    </Router>,

@@ -6,7 +6,21 @@
     <base href="/" />
     <!--Stylesheet-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAswzExMSEUwEVNNiScn_Ah2AUOXBxnxLM",
+            authDomain: "blog-46926.firebaseapp.com",
+            databaseURL: "https://blog-46926.firebaseio.com",
+            storageBucket: "",
+            messagingSenderId: "859159925477"
+        };
+        firebase.initializeApp(config);
+    </script>
+
 </head>
 <body>
     <!--Container for React rendering-->
