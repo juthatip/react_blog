@@ -26,6 +26,7 @@ export default class ContentForm extends Component {
   }
 
   formatDate(date) {
+    // reassign variable use let
     let hours = date.getHours();
     let minutes = date.getMinutes();
     let seconds = date.getSeconds();
@@ -35,25 +36,39 @@ export default class ContentForm extends Component {
   }
 
   handleContentForm() {
-    let contentId = firebase.database().ref().child('content').push().key;
+    // let contentId = firebase.database().ref().child('content').push().key;
     let d = new Date();
     let time = this.formatDate(d);
 
-    console.log(time);
+    let title = this.state.title;
+        title = title.replace(/\s+/g, '-').toLowerCase();
+    console.log(title);
 
-    firebase.database().ref('content/' + contentId ).set({
-      title: this.state.title,
-      description: this.state.description,
-      tag: this.state.tag,
-      date: time
-    });
 
-    this.setState({
-      title: '',
-      description: '',
-      tag: ''
-    });
+    firebase.database().ref('content/' + title).once('value').then((snapshot) => {
+      return snapshot.exists()
+    }).then((status) => {
 
+      if (status === true) {
+        title = title + Math.floor(1000 + Math.random() * 9000);
+      }
+
+      console.log()
+
+      firebase.database().ref('content/' + title).set({
+        title: title,
+        description: this.state.description,
+        tag: this.state.tag,
+        date: time
+      });
+
+      this.setState({
+        title: '',
+        description: '',
+        tag: ''
+      });
+
+    })
 
   }
     render() {

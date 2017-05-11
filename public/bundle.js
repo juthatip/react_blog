@@ -67,7 +67,7 @@
 	
 	var _home2 = _interopRequireDefault(_home);
 	
-	var _About = __webpack_require__(/*! ./common/About */ 237);
+	var _About = __webpack_require__(/*! ./common/About */ 238);
 	
 	var _About2 = _interopRequireDefault(_About);
 	
@@ -75,13 +75,17 @@
 	
 	var _ContentForm2 = _interopRequireDefault(_ContentForm);
 	
-	var _Content = __webpack_require__(/*! ./Components/Content */ 240);
+	var _Content = __webpack_require__(/*! ./Components/Content */ 237);
 	
 	var _Content2 = _interopRequireDefault(_Content);
 	
+	var _content = __webpack_require__(/*! ./common/content */ 240);
+	
+	var _content2 = _interopRequireDefault(_content);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// Import routing components
+	// Import custom components
 	_reactDom2.default.render(_react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.browserHistory },
@@ -90,11 +94,12 @@
 	        { path: '/', component: _main2.default },
 	        _react2.default.createElement(_reactRouter.IndexRoute, { component: _home2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/content', component: _Content2.default }),
+	        _react2.default.createElement(_reactRouter.Route, { path: '/content/:title', component: _content2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/create', component: _ContentForm2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/about', component: _About2.default })
 	    )
 	), document.getElementById('container'));
-	// Import custom components
+	// Import routing components
 
 /***/ },
 /* 1 */
@@ -16435,7 +16440,8 @@
 	  if (x === y) {
 	    // Steps 1-5, 7-10
 	    // Steps 6.b-6.e: +0 != -0
-	    return x !== 0 || 1 / x === 1 / y;
+	    // Added the nonzero y check to make Flow happy, but it is redundant
+	    return x !== 0 || y !== 0 || 1 / x === 1 / y;
 	  } else {
 	    // Step 6.a: NaN == NaN
 	    return x !== x && y !== y;
@@ -27954,7 +27960,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Content = __webpack_require__(/*! ../Components/Content */ 240);
+	var _Content = __webpack_require__(/*! ../Components/Content */ 237);
 	
 	var _Content2 = _interopRequireDefault(_Content);
 	
@@ -27998,6 +28004,121 @@
 
 /***/ },
 /* 237 */
+/*!***********************************!*\
+  !*** ./src/Components/Content.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 172);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Content = function (_Component) {
+	  _inherits(Content, _Component);
+	
+	  function Content() {
+	    _classCallCheck(this, Content);
+	
+	    var _this = _possibleConstructorReturn(this, (Content.__proto__ || Object.getPrototypeOf(Content)).call(this));
+	
+	    _this.state = {
+	      data: []
+	    };
+	
+	    var content = firebase.database().ref('content');
+	
+	    content.once('value', function (snapshot) {
+	
+	      var data = snapshot.val();
+	      var dataArr = Object.keys(data).map(function (key) {
+	        data[key].id = key;
+	        return data[key];
+	      }); // change object to array
+	      // console.log(dataArr)
+	      // console.log(dataArr);
+	      // this.data = dataArr;
+	      // console.log(this.state.data);
+	      _this.setState({
+	        data: dataArr
+	      });
+	    });
+	    return _this;
+	  }
+	
+	  _createClass(Content, [{
+	    key: 'render',
+	    value: function render() {
+	      // let contentArticle = this.state.data.map((val, i)=> {
+	      //   return (
+	      //     <div key={i}>
+	      //       {val.title}
+	      //     </div>
+	      //   );
+	      // });
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.state.data.map(function (val, i) {
+	          return _react2.default.createElement(
+	            'div',
+	            { key: i },
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: 'content/' + val.id },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                val.title
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              val.description
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              val.date
+	            ),
+	            _react2.default.createElement('br', null),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'btn btn-default' },
+	              val.tag
+	            )
+	          );
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return Content;
+	}(_react.Component);
+	
+	exports.default = Content;
+
+/***/ },
+/* 238 */
 /*!*****************************!*\
   !*** ./src/common/About.js ***!
   \*****************************/
@@ -28049,7 +28170,6 @@
 	exports.default = About;
 
 /***/ },
-/* 238 */,
 /* 239 */
 /*!***************************************!*\
   !*** ./src/Components/ContentForm.js ***!
@@ -28114,6 +28234,7 @@
 	  }, {
 	    key: 'formatDate',
 	    value: function formatDate(date) {
+	      // reassign variable use let
 	      var hours = date.getHours();
 	      var minutes = date.getMinutes();
 	      var seconds = date.getSeconds();
@@ -28124,23 +28245,38 @@
 	  }, {
 	    key: 'handleContentForm',
 	    value: function handleContentForm() {
-	      var contentId = firebase.database().ref().child('content').push().key;
+	      var _this2 = this;
+	
+	      // let contentId = firebase.database().ref().child('content').push().key;
 	      var d = new Date();
 	      var time = this.formatDate(d);
 	
-	      console.log(time);
+	      var title = this.state.title;
+	      title = title.replace(/\s+/g, '-').toLowerCase();
+	      console.log(title);
 	
-	      firebase.database().ref('content/' + contentId).set({
-	        title: this.state.title,
-	        description: this.state.description,
-	        tag: this.state.tag,
-	        date: time
-	      });
+	      firebase.database().ref('content/' + title).once('value').then(function (snapshot) {
+	        return snapshot.exists();
+	      }).then(function (status) {
 	
-	      this.setState({
-	        title: '',
-	        description: '',
-	        tag: ''
+	        if (status === true) {
+	          title = title + Math.floor(1000 + Math.random() * 9000);
+	        }
+	
+	        console.log();
+	
+	        firebase.database().ref('content/' + title).set({
+	          title: title,
+	          description: _this2.state.description,
+	          tag: _this2.state.tag,
+	          date: time
+	        });
+	
+	        _this2.setState({
+	          title: '',
+	          description: '',
+	          tag: ''
+	        });
 	      });
 	    }
 	  }, {
@@ -28204,9 +28340,9 @@
 
 /***/ },
 /* 240 */
-/*!***********************************!*\
-  !*** ./src/Components/Content.js ***!
-  \***********************************/
+/*!*******************************!*\
+  !*** ./src/common/content.js ***!
+  \*******************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28229,57 +28365,55 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Content = function (_Component) {
-	  _inherits(Content, _Component);
+	// import Content from '../Components/Content';
 	
-	  function Content() {
-	    _classCallCheck(this, Content);
+	var ContentContainer = function (_Component) {
+	  _inherits(ContentContainer, _Component);
 	
-	    var _this = _possibleConstructorReturn(this, (Content.__proto__ || Object.getPrototypeOf(Content)).call(this));
+	  function ContentContainer() {
+	    _classCallCheck(this, ContentContainer);
+	
+	    var _this = _possibleConstructorReturn(this, (ContentContainer.__proto__ || Object.getPrototypeOf(ContentContainer)).call(this));
 	
 	    _this.state = {
-	      data: ''
+	      data: {}
 	    };
-	
-	    var content = firebase.database().ref('content');
-	
-	    content.on('value', function (snapshot) {
-	
-	      var data = snapshot.val();
-	      var dataArr = Object.keys(data).map(function (key) {
-	        return data[key];
-	      }); // change object to array
-	
-	      // console.log(dataArr);
-	      _this.data = dataArr;
-	      // console.log(this.state.data);
-	      _this.setState({
-	        data: _this.data
-	      });
-	    });
 	    return _this;
 	  }
 	
-	  _createClass(Content, [{
+	  _createClass(ContentContainer, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var params = this.props.routeParams.title;
+	      this.loadContent(params);
+	    }
+	  }, {
+	    key: 'loadContent',
+	    value: function loadContent(params) {
+	      firebase.database().ref('content/' + params).once('value').then(function (snapshot) {
+	
+	        var data = snapshot.val();
+	        // let dataArr = Object.keys(data).map(key => data[key]);
+	
+	        console.log(data);
+	
+	        this.setState({
+	          data: data
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.state.data);
-	      // let contentArticle = this.state.data.map((val, i)=> {
-	      //   return(
-	      //     <div key={i}>
-	      //       {val.title}
-	      //     </div>
-	      //   );
-	      // });
 	
 	      return _react2.default.createElement('div', null);
 	    }
 	  }]);
 	
-	  return Content;
+	  return ContentContainer;
 	}(_react.Component);
 	
-	exports.default = Content;
+	exports.default = ContentContainer;
 
 /***/ }
 /******/ ]);

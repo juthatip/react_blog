@@ -8,6 +8,7 @@ import Home from './common/home';
 import About from './common/About';
 import ContentForm from './Components/ContentForm';
 import Content from './Components/Content';
+import ContentContainer from './common/content';
 
 
 ReactDOM.render(
@@ -15,6 +16,7 @@ ReactDOM.render(
     <Route path="/" component={Main}>
      <IndexRoute component={Home} />
           <Route path="/content" component={Content} />
+          <Route path="/content/:title" component={ContentContainer} />
            <Route path="/create" component={ContentForm} />
            <Route path="/about" component={About} />
        </Route>

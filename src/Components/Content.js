@@ -1,32 +1,36 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 export default class Content extends Component {
   constructor() {
     super();
 
     this.state = {
-      data: ''
+      data: []
     }
 
     var content = firebase.database().ref('content');
 
-    content.on('value', (snapshot) => {
+    content.once('value', (snapshot) => {
 
       let data = snapshot.val();
-      let dataArr = Object.keys(data).map(key => data[key]); // change object to array
-
+      let dataArr = Object.keys(data).map(key =>  {
+        data[key].id = key;
+        return  data[key];
+      }); // change object to array
+      // console.log(dataArr)
       // console.log(dataArr);
-      this.data = dataArr;
+      // this.data = dataArr;
       // console.log(this.state.data);
       this.setState({
-        data: this.data
+        data: dataArr
       });
     });
   }
+
   render() {
-    console.log(this.state.data);
     // let contentArticle = this.state.data.map((val, i)=> {
-    //   return(
+    //   return (
     //     <div key={i}>
     //       {val.title}
     //     </div>
@@ -35,8 +39,17 @@ export default class Content extends Component {
 
     return(
       <div>
-        {/*{contentArticle}*/}
+        {
+          this.state.data.map((val, i) => (
+            <div key={i}>
+              <Link to={`content/${val.id}`}><h2>{val.title}</h2></Link>
+              <p>{val.description}</p>
+              <span>{val.date}</span><br />
+              <span className="btn btn-default">{val.tag}</span>
+            </div>
+          ))
+        }
       </div>
-    );
+    )
   }
 }
